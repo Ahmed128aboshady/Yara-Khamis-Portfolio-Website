@@ -646,3 +646,66 @@
   .orbit-ring.ring-2 { width: 290px; height: 290px; }
   .orbit-ring.ring-3 { width: 390px; height: 390px; }
 }
+
+/* ========================================================
+   WORKFLOW SHOWCASE: REAL VELORA INCENSE PROJECT VISUALS
+   ======================================================== */
+.workflow-item {
+  border-top: 1px solid var(--line);
+  padding-top: 22px;
+  display: flex;
+  flex-direction: column;
+}
+.workflow-visual {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 11;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 20px;
+  background: #111216;
+  border: 1px solid rgba(212, 179, 106, 0.25);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.65), inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+.workflow-visual img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s ease;
+  filter: contrast(1.02) brightness(0.98);
+}
+.workflow-item:hover .workflow-visual img {
+  transform: scale(1.07);
+}
+.workflow-visual-tag {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 7.5px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--gold);
+  background: rgba(11, 12, 16, 0.88);
+  backdrop-filter: blur(8px);
+  padding: 4px 9px;
+  border-radius: 4px;
+  border: 1px solid rgba(212, 179, 106, 0.3);
+  font-weight: 600;
+  pointer-events: none;
+  z-index: 2;
+}
+.workflow-item .eyebrow {
+  margin-bottom: 12px;
+}
+.workflow-item h3 {
+  font-size: 22px;
+  margin-bottom: 10px;
+  color: var(--ink);
+}
+.workflow-item p {
+  font-size: 11px;
+  line-height: 1.75;
+  color: var(--muted);
+}
+
