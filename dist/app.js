@@ -355,18 +355,32 @@ document.addEventListener('click',e=>{
   navigate(u.href);
 });
 function workParam(key,val){const u=new URL(location.href);if(val&&val!=='All'&&val!=='grid'&&val!=='curated')u.searchParams.set(key,val);else u.searchParams.delete(key);history.replaceState(history.state,'',u.pathname+u.search);}
+let plaqueRafId=null;
+let plaqueAngle=0;
+let lastPlaqueTime=0;
 function bindAboutCard(){
   const plaque=$('#interactive-plaque');
   if(!plaque)return;
-  plaque.addEventListener('click',()=>{
-    plaque.classList.toggle('is-paused');
-  });
-  plaque.addEventListener('keydown',e=>{
-    if(e.key==='Enter'||e.key===' '){
-      e.preventDefault();
-      plaque.classList.toggle('is-paused');
+  if(plaqueRafId){
+    cancelAnimationFrame(plaqueRafId);
+    plaqueRafId=null;
+  }
+  plaque.style.transformStyle='preserve-3d';
+  plaque.style.willChange='transform';
+  lastPlaqueTime=performance.now();
+  function spinLoop(now){
+    const el=$('#interactive-plaque');
+    if(!el){
+      plaqueRafId=null;
+      return;
     }
-  });
+    const dt=Math.min((now-(lastPlaqueTime||now))/1000,0.1);
+    lastPlaqueTime=now;
+    plaqueAngle=(plaqueAngle+(dt*22.5))%360;
+    el.style.transform=`rotateX(6deg) rotateY(${plaqueAngle.toFixed(2)}deg)`;
+    plaqueRafId=requestAnimationFrame(spinLoop);
+  }
+  plaqueRafId=requestAnimationFrame(spinLoop);
 }
 async function render(){const ver=++routeVersion;currentPath=fromUrl(location.pathname);let p;if(currentPath==='/')main.innerHTML=home();else if(currentPath==='/work/'){filterLimit=Number(sessionStorage.getItem('work-limit')||12);main.innerHTML=work();updateWork();$$('[data-filter]').forEach(b=>b.addEventListener('click',()=>{workParam('category',b.dataset.filter);$$('[data-filter]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));updateWork(true);}));let timer;$('#search').addEventListener('input',e=>{const value=e.target.value;clearTimeout(timer);timer=setTimeout(()=>{if(ver!==routeVersion)return;workParam('q',value);updateWork(true);},160);});$('#sort').addEventListener('change',e=>{workParam('sort',e.target.value);updateWork(true);});$$('[data-view]').forEach(b=>b.addEventListener('click',()=>{workParam('view',b.dataset.view);$$('[data-view]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));$('#work-grid').classList.toggle('focus-grid',b.dataset.view==='focus');}));$('#load-more').addEventListener('click',()=>{filterLimit+=12;const top=scrollY;updateWork();window.scrollTo({top,behavior:'instant'});});  }else if(currentPath.startsWith('/project/')){p=projects.find(p=>p.id===currentPath.split('/')[2]);main.innerHTML=p?projectPage(p):notFound();if(p){$$('[data-image]').forEach(b=>b.addEventListener('click',()=>openImages(p.images,Number(b.dataset.image),p.title,b)));$$('.swatch-item').forEach(b=>b.addEventListener('click',async()=>{const hex=b.dataset.hex;try{await navigator.clipboard.writeText(hex);toast(`Copied ${hex} to clipboard!`);}catch{toast(hex);}}));const share=async()=>{const data={title:p.title+' — Yara Khamis',url:location.href};try{if(navigator.share)await navigator.share(data);else{await navigator.clipboard.writeText(data.url);toast('Project link copied.');}}catch(e){if(e.name!=='AbortError')toast('Copy the address from your browser to share this project.');}};$('#share-project')?.addEventListener('click',share);$('#share-mobile')?.addEventListener('click',share);}}else if(currentPath==='/about/'){main.innerHTML=about();bindAboutCard();}else if(currentPath==='/services/')main.innerHTML=servicesPage();else if(currentPath==='/contact/'){main.innerHTML=contact();bindContact();}else main.innerHTML=notFound();document.body.classList.toggle('case-page',!!p);if(p)document.documentElement.style.setProperty('--brand-accent',p.caseStudy?.accent||'var(--gold)');else document.documentElement.style.removeProperty('--brand-accent');setNav(currentPath);document.title=p?`${p.title} — Yara Khamis`:currentPath==='/'?'Yara Khamis — Packaging, Spaces & Brand Identity':`${currentPath.split('/')[1].replace(/^./,c=>c.toUpperCase())} — Yara Khamis`;startReveal();}
 function notFound(){return `<section class="section empty-state"><span class="eyebrow">404 / A DIFFERENT DIRECTION</span><h1>Let’s find<br><em>your way back.</em></h1>${button('Explore the portfolio','work/')}</section>`;}

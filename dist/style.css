@@ -453,7 +453,6 @@
   width: 240px;
   height: 310px;
   transform-style: preserve-3d;
-  animation: plaque-spin-slow 18s linear infinite;
   cursor: pointer;
   user-select: none;
   outline: none;
@@ -465,19 +464,6 @@
 .logo-plaque:focus-visible {
   outline: 2px solid var(--gold);
   outline-offset: 8px;
-}
-.logo-plaque:hover,
-.logo-plaque.is-paused {
-  animation-play-state: paused;
-}
-
-@keyframes plaque-spin-slow {
-  0% {
-    transform: rotateX(6deg) rotateY(0deg);
-  }
-  100% {
-    transform: rotateX(6deg) rotateY(360deg);
-  }
 }
 
 .plaque-face {
@@ -516,7 +502,7 @@
 
 /* Front Face */
 .plaque-front {
-  transform: rotateY(0deg) translateZ(1px);
+  transform: rotateY(0deg) translateZ(2px);
 }
 .plaque-front img {
   width: 175px;
@@ -536,7 +522,7 @@
 
 /* Back Face */
 .plaque-back {
-  transform: rotateY(180deg) translateZ(1px);
+  transform: rotateY(180deg) translateZ(2px);
   text-align: center;
 }
 .plaque-back-body {
