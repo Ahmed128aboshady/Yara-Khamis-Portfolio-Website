@@ -392,7 +392,7 @@
 }
 
 /* ========================================================
-   INTERACTIVE 3D ROTATING & FLIPPING STUDIO CARD
+   3D CONTINUOUS SLOW ROTATING STUDIO CARD (PURE DARK LUXURY)
    ======================================================== */
 .about-art {
   position: relative;
@@ -402,59 +402,50 @@
   justify-content: center;
   perspective: 1400px;
   overflow: visible;
-}
-.about-bg {
-  position: absolute;
-  inset: 0;
-  object-fit: cover;
-  width: 100%;
-  height: 100%;
-  opacity: .2;
-  mask-image: radial-gradient(ellipse, #000 25%, transparent 70%);
-  pointer-events: none;
+  background: radial-gradient(circle at 50% 50%, rgba(212, 179, 106, 0.04) 0%, transparent 65%);
 }
 .about-orbit {
   position: absolute;
-  width: 110%;
-  height: 50%;
-  border: 1px solid rgba(212, 179, 106, 0.4);
+  width: 105%;
+  height: 48%;
+  border: 1px solid rgba(212, 179, 106, 0.22);
   border-radius: 50%;
-  transform: rotate(-35deg);
-  box-shadow: 0 0 25px rgba(212, 179, 106, 0.12);
+  transform: rotate(-30deg);
+  box-shadow: 0 0 25px rgba(212, 179, 106, 0.06);
   pointer-events: none;
-  animation: orbit-wobble 14s ease-in-out infinite alternate;
+  animation: orbit-wobble 16s ease-in-out infinite alternate;
 }
 .about-orbit.orbit-secondary {
-  width: 92%;
-  height: 38%;
-  border-color: rgba(212, 179, 106, 0.22);
-  transform: rotate(-22deg);
-  animation: orbit-wobble-sec 18s ease-in-out infinite alternate;
+  width: 88%;
+  height: 36%;
+  border-color: rgba(212, 179, 106, 0.12);
+  transform: rotate(-18deg);
+  animation: orbit-wobble-sec 20s ease-in-out infinite alternate;
 }
 @keyframes orbit-wobble {
-  0% { transform: rotate(-35deg) scale(1); border-color: rgba(212, 179, 106, 0.35); }
-  50% { transform: rotate(-29deg) scale(1.03); border-color: rgba(212, 179, 106, 0.65); box-shadow: 0 0 35px rgba(212, 179, 106, 0.25); }
-  100% { transform: rotate(-40deg) scale(0.98); border-color: rgba(212, 179, 106, 0.4); }
+  0% { transform: rotate(-30deg) scale(1); border-color: rgba(212, 179, 106, 0.18); }
+  50% { transform: rotate(-24deg) scale(1.02); border-color: rgba(212, 179, 106, 0.35); box-shadow: 0 0 30px rgba(212, 179, 106, 0.12); }
+  100% { transform: rotate(-35deg) scale(0.98); border-color: rgba(212, 179, 106, 0.22); }
 }
 @keyframes orbit-wobble-sec {
-  0% { transform: rotate(-22deg) scale(1); }
-  50% { transform: rotate(-17deg) scale(1.04); }
-  100% { transform: rotate(-26deg) scale(0.97); }
+  0% { transform: rotate(-18deg) scale(1); }
+  50% { transform: rotate(-13deg) scale(1.03); }
+  100% { transform: rotate(-22deg) scale(0.98); }
 }
 
 .logo-plaque-container {
   position: relative;
   z-index: 3;
   perspective: 1400px;
-  animation: plaque-levitate 6s ease-in-out infinite;
+  animation: plaque-levitate 7s ease-in-out infinite;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 @keyframes plaque-levitate {
-  0% { transform: translateY(0px) rotateZ(-1deg); }
-  50% { transform: translateY(-16px) rotateZ(1.5deg); }
-  100% { transform: translateY(0px) rotateZ(-1deg); }
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-14px); }
+  100% { transform: translateY(0px); }
 }
 
 .logo-plaque {
@@ -462,27 +453,37 @@
   width: 240px;
   height: 310px;
   transform-style: preserve-3d;
-  transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
-  transform: rotateX(calc(10deg + var(--mouse-rx, 0deg))) rotateY(calc(-18deg + var(--mouse-ry, 0deg)));
+  animation: plaque-spin-slow 18s linear infinite;
   cursor: pointer;
   user-select: none;
   outline: none;
   padding: 0;
   background: none;
   border: 0;
+  will-change: transform;
 }
 .logo-plaque:focus-visible {
   outline: 2px solid var(--gold);
   outline-offset: 8px;
 }
-.logo-plaque.is-flipped {
-  transform: rotateX(calc(-10deg + var(--mouse-rx, 0deg))) rotateY(calc(162deg + var(--mouse-ry, 0deg)));
+.logo-plaque:hover,
+.logo-plaque.is-paused {
+  animation-play-state: paused;
+}
+
+@keyframes plaque-spin-slow {
+  0% {
+    transform: rotateX(6deg) rotateY(0deg);
+  }
+  100% {
+    transform: rotateX(6deg) rotateY(360deg);
+  }
 }
 
 .plaque-face {
   position: absolute;
   inset: 0;
-  border-radius: 6px;
+  border-radius: 8px;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   display: flex;
@@ -490,25 +491,13 @@
   align-items: center;
   justify-content: center;
   padding: 30px 20px;
-  background: linear-gradient(140deg, #282830 0%, #111216 45%, #07070a 100%);
-  border: 1px solid rgba(212, 179, 106, 0.65);
+  background: linear-gradient(145deg, #18191d 0%, #0d0d10 60%, #08080a 100%);
+  border: 1px solid rgba(212, 179, 106, 0.45);
   box-shadow: 
-    0 25px 50px rgba(0, 0, 0, 0.75),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.08),
-    inset 0 1px 0 rgba(212, 179, 106, 0.4);
+    0 25px 55px rgba(0, 0, 0, 0.85),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05),
+    inset 0 1px 0 rgba(212, 179, 106, 0.35);
   overflow: hidden;
-}
-
-/* Dynamic Glare & Specular Sheen */
-.plaque-sheen {
-  position: absolute;
-  inset: -50%;
-  pointer-events: none;
-  z-index: 5;
-  background: radial-gradient(circle at var(--sheen-x, 40%) var(--sheen-y, 30%), rgba(255, 255, 255, 0.25) 0%, rgba(212, 179, 106, 0.14) 35%, transparent 65%);
-  mix-blend-mode: overlay;
-  transition: opacity 0.3s ease;
-  border-radius: 6px;
 }
 
 /* Decorative Gold Corner Brackets */
@@ -532,21 +521,17 @@
 .plaque-front img {
   width: 175px;
   height: auto;
-  mix-blend-mode: screen;
-  filter: drop-shadow(0 4px 12px rgba(212, 179, 106, 0.3));
-  transition: transform 0.4s ease;
-}
-.logo-plaque:hover .plaque-front img {
-  transform: scale(1.04);
+  filter: drop-shadow(0 4px 14px rgba(212, 179, 106, 0.28));
+  display: block;
 }
 .plaque-caption {
   margin-top: 18px;
-  font-size: 8px;
+  font-size: 8.5px;
   letter-spacing: 2.2px;
   color: var(--gold);
   text-transform: uppercase;
   font-weight: 600;
-  opacity: 0.85;
+  opacity: 0.9;
 }
 
 /* Back Face */
@@ -608,21 +593,6 @@
   letter-spacing: 1.2px;
   color: #7d7d86;
   margin-top: 4px;
-}
-
-/* Hint Pill below card */
-.plaque-hint {
-  text-align: center;
-  margin-top: 18px;
-  font-size: 8.5px;
-  letter-spacing: 1.6px;
-  color: var(--gold);
-  opacity: 0.7;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
-}
-.logo-plaque-container:hover .plaque-hint {
-  opacity: 1;
 }
 
 .art-caption {
