@@ -20,7 +20,7 @@ const pages = [
   ['about', 'About Yara Khamis'],
   ['services', 'Design Services — Yara Khamis'],
   ['contact', 'Let’s Collaborate — Yara Khamis'],
-  ...data.map(p => ['project/' + p.id, p.title + ' — Yara Khamis'])
+  ...data.map(p => ['project/' + p.id, `${p.caseStudy?.client || p.title} — Case Study | Yara Khamis`])
 ];
 
 for (const [route, title] of pages) {
