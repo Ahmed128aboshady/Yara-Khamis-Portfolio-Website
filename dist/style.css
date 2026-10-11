@@ -390,3 +390,261 @@
   .specs-grid { grid-template-columns: 1fr; }
   .palette-swatches { grid-template-columns: 1fr; }
 }
+
+/* ========================================================
+   INTERACTIVE 3D ROTATING & FLIPPING STUDIO CARD
+   ======================================================== */
+.about-art {
+  position: relative;
+  height: 560px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1400px;
+  overflow: visible;
+}
+.about-bg {
+  position: absolute;
+  inset: 0;
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  opacity: .2;
+  mask-image: radial-gradient(ellipse, #000 25%, transparent 70%);
+  pointer-events: none;
+}
+.about-orbit {
+  position: absolute;
+  width: 110%;
+  height: 50%;
+  border: 1px solid rgba(212, 179, 106, 0.4);
+  border-radius: 50%;
+  transform: rotate(-35deg);
+  box-shadow: 0 0 25px rgba(212, 179, 106, 0.12);
+  pointer-events: none;
+  animation: orbit-wobble 14s ease-in-out infinite alternate;
+}
+.about-orbit.orbit-secondary {
+  width: 92%;
+  height: 38%;
+  border-color: rgba(212, 179, 106, 0.22);
+  transform: rotate(-22deg);
+  animation: orbit-wobble-sec 18s ease-in-out infinite alternate;
+}
+@keyframes orbit-wobble {
+  0% { transform: rotate(-35deg) scale(1); border-color: rgba(212, 179, 106, 0.35); }
+  50% { transform: rotate(-29deg) scale(1.03); border-color: rgba(212, 179, 106, 0.65); box-shadow: 0 0 35px rgba(212, 179, 106, 0.25); }
+  100% { transform: rotate(-40deg) scale(0.98); border-color: rgba(212, 179, 106, 0.4); }
+}
+@keyframes orbit-wobble-sec {
+  0% { transform: rotate(-22deg) scale(1); }
+  50% { transform: rotate(-17deg) scale(1.04); }
+  100% { transform: rotate(-26deg) scale(0.97); }
+}
+
+.logo-plaque-container {
+  position: relative;
+  z-index: 3;
+  perspective: 1400px;
+  animation: plaque-levitate 6s ease-in-out infinite;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+@keyframes plaque-levitate {
+  0% { transform: translateY(0px) rotateZ(-1deg); }
+  50% { transform: translateY(-16px) rotateZ(1.5deg); }
+  100% { transform: translateY(0px) rotateZ(-1deg); }
+}
+
+.logo-plaque {
+  position: relative;
+  width: 240px;
+  height: 310px;
+  transform-style: preserve-3d;
+  transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+  transform: rotateX(calc(10deg + var(--mouse-rx, 0deg))) rotateY(calc(-18deg + var(--mouse-ry, 0deg)));
+  cursor: pointer;
+  user-select: none;
+  outline: none;
+  padding: 0;
+  background: none;
+  border: 0;
+}
+.logo-plaque:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 8px;
+}
+.logo-plaque.is-flipped {
+  transform: rotateX(calc(-10deg + var(--mouse-rx, 0deg))) rotateY(calc(162deg + var(--mouse-ry, 0deg)));
+}
+
+.plaque-face {
+  position: absolute;
+  inset: 0;
+  border-radius: 6px;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 20px;
+  background: linear-gradient(140deg, #282830 0%, #111216 45%, #07070a 100%);
+  border: 1px solid rgba(212, 179, 106, 0.65);
+  box-shadow: 
+    0 25px 50px rgba(0, 0, 0, 0.75),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+    inset 0 1px 0 rgba(212, 179, 106, 0.4);
+  overflow: hidden;
+}
+
+/* Dynamic Glare & Specular Sheen */
+.plaque-sheen {
+  position: absolute;
+  inset: -50%;
+  pointer-events: none;
+  z-index: 5;
+  background: radial-gradient(circle at var(--sheen-x, 40%) var(--sheen-y, 30%), rgba(255, 255, 255, 0.25) 0%, rgba(212, 179, 106, 0.14) 35%, transparent 65%);
+  mix-blend-mode: overlay;
+  transition: opacity 0.3s ease;
+  border-radius: 6px;
+}
+
+/* Decorative Gold Corner Brackets */
+.plaque-corner {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border: 1px solid var(--gold);
+  pointer-events: none;
+  opacity: 0.65;
+}
+.plaque-corner.tl { top: 10px; left: 10px; border-right: 0; border-bottom: 0; }
+.plaque-corner.br { bottom: 10px; right: 10px; border-left: 0; border-top: 0; }
+.plaque-corner.tr { top: 10px; right: 10px; border-left: 0; border-bottom: 0; }
+.plaque-corner.bl { bottom: 10px; left: 10px; border-right: 0; border-top: 0; }
+
+/* Front Face */
+.plaque-front {
+  transform: rotateY(0deg) translateZ(1px);
+}
+.plaque-front img {
+  width: 175px;
+  height: auto;
+  mix-blend-mode: screen;
+  filter: drop-shadow(0 4px 12px rgba(212, 179, 106, 0.3));
+  transition: transform 0.4s ease;
+}
+.logo-plaque:hover .plaque-front img {
+  transform: scale(1.04);
+}
+.plaque-caption {
+  margin-top: 18px;
+  font-size: 8px;
+  letter-spacing: 2.2px;
+  color: var(--gold);
+  text-transform: uppercase;
+  font-weight: 600;
+  opacity: 0.85;
+}
+
+/* Back Face */
+.plaque-back {
+  transform: rotateY(180deg) translateZ(1px);
+  text-align: center;
+}
+.plaque-back-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+}
+.plaque-monogram {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--gold);
+  border-radius: 50%;
+  color: var(--gold);
+  font-family: var(--serif);
+  font-size: 18px;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+  background: rgba(212, 179, 106, 0.08);
+  box-shadow: 0 0 15px rgba(212, 179, 106, 0.2);
+}
+.plaque-back h3 {
+  font-size: 20px;
+  letter-spacing: 1px;
+  color: var(--ink);
+  margin: 0;
+}
+.plaque-back p {
+  font-size: 10px;
+  color: var(--muted);
+  line-height: 1.4;
+  margin: 0;
+  max-width: 190px;
+}
+.plaque-rule {
+  width: 50px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  margin: 8px 0;
+}
+.plaque-tagline {
+  font-size: 7.5px;
+  letter-spacing: 2px;
+  color: var(--gold);
+  text-transform: uppercase;
+}
+.plaque-stamp {
+  font-size: 8px;
+  letter-spacing: 1.2px;
+  color: #7d7d86;
+  margin-top: 4px;
+}
+
+/* Hint Pill below card */
+.plaque-hint {
+  text-align: center;
+  margin-top: 18px;
+  font-size: 8.5px;
+  letter-spacing: 1.6px;
+  color: var(--gold);
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+.logo-plaque-container:hover .plaque-hint {
+  opacity: 1;
+}
+
+.art-caption {
+  position: absolute;
+  bottom: 12px;
+  font-size: 8px;
+  letter-spacing: 2.5px;
+  color: var(--gold);
+  pointer-events: none;
+}
+
+@media(max-width:800px) {
+  .logo-plaque { width: 200px; height: 260px; }
+  .plaque-front img { width: 145px; }
+  .plaque-monogram { width: 38px; height: 38px; font-size: 16px; }
+  .plaque-back h3 { font-size: 18px; }
+}
+@media(max-width:600px) {
+  .about-art { height: 420px; }
+  .logo-plaque { width: 180px; height: 235px; }
+  .plaque-front img { width: 130px; }
+  .plaque-monogram { width: 34px; height: 34px; font-size: 14px; }
+  .plaque-back h3 { font-size: 16px; }
+  .plaque-back p { font-size: 9px; }
+}
