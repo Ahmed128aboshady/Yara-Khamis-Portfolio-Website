@@ -12,10 +12,10 @@ let scene, renderer, camera, product, lid, tray, keyLight, rimLight, goldSpot, b
 let textures={}, ready=false, dateModels=[], dateTextures={}, dateMaterial;
 const anim={open:0,explode:0};
 function tween(target,values,duration=.9){if(window.gsap&&!reduce.matches)gsap.to(target,{...values,duration,ease:'power3.inOut',overwrite:'auto'});else Object.assign(target,values);}
-function setMode(mode){state.mode=mode;document.querySelectorAll('[data-state]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.state===mode)));$('#state-description').textContent=descriptions[mode];tween(anim,{open:mode==='closed'?0:1,explode:mode==='exploded'?1:0});}
+function setMode(mode){state.mode=mode;document.querySelectorAll('[data-state]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.state===mode)));const desc=$('#state-description');if(desc)desc.textContent=descriptions[mode];tween(anim,{open:mode==='closed'?0:1,explode:mode==='exploded'?1:0});if(window.parent&&window.parent!==window){try{window.parent.postMessage({type:'unbox-state',open:mode!=='closed'},'*');}catch(_){}}}
 if(embedMode==='hero'){
- const b=document.createElement('button');b.textContent='Unbox';b.className='hero-unbox';b.setAttribute('aria-pressed','false');b.addEventListener('click',()=>{const open=state.mode==='closed';setMode(open?'open':'closed');b.textContent=open?'Close':'Unbox';b.setAttribute('aria-pressed',String(open));});$('.view-tools').prepend(b);
- window.addEventListener('message',e=>{if(e.origin!==location.origin||e.source!==parent||e.data?.type!=='hero-progress'||reduce.matches)return;const v=Math.max(0,Math.min(1,Number(e.data.value)||0));if(v>0){tween(anim,{open:v,explode:v*.45},.3);}else if(state.mode==='closed'){tween(anim,{open:0,explode:0},.3);}});
+
+ window.addEventListener('message',e=>{if(!e.data)return;if(e.data.type==='toggle-unbox'){const next=state.mode==='closed'?'open':'closed';setMode(next);return;}if(e.data.type==='set-unbox'){setMode(e.data.open?'open':'closed');return;}if(e.data.type==='hero-progress'&&!reduce.matches){const v=Math.max(0,Math.min(1,Number(e.data.value)||0));if(v>0){tween(anim,{open:v,explode:v*.45},.3);}else if(state.mode==='closed'){tween(anim,{open:0,explode:0},.3);}}});
 }
 document.querySelectorAll('[data-state]').forEach(b=>b.addEventListener('click',()=>setMode(b.dataset.state)));
 document.querySelectorAll('[data-demo]').forEach(b=>b.addEventListener('click',()=>{setMode(b.dataset.demo);$('#experience').scrollIntoView({behavior:reduce.matches?'instant':'smooth'});}));
@@ -110,7 +110,7 @@ try {
    }
  }
 } catch(e) { console.warn('Dates textures fallback to procedural', e); }
-createModel();ready=true;$('#loading').hidden=true;
+createModel();ready=true;$('#loading').hidden=true;if(window.parent&&window.parent!==window){try{window.parent.postMessage({type:'unbox-state',open:state.mode!=='closed'},'*');}catch(_){}}
 const resize=()=>{const w=stage.clientWidth,h=stage.clientHeight;camera.aspect=w/h;camera.fov=w<600?43:34;camera.updateProjectionMatrix();renderer.setSize(w,h);};new ResizeObserver(resize).observe(stage);resize();if(embedMode){state.active=true;}else{new IntersectionObserver(entries=>state.active=entries[0].isIntersecting,{rootMargin:'100px'}).observe(stage);}
 let last=performance.now();function render(t){requestAnimationFrame(render);const dt=Math.min((t-last)/1000,.04);last=t;if(!state.active||document.hidden)return;if(state.spin&&!state.dragging)state.yaw+=dt*.22;product.rotation.set(state.pitch,state.yaw,0);lid.position.y=anim.open*(.9+anim.explode*.8);lid.rotation.z=anim.open*(1-anim.explode)*-.09;lid.position.x=anim.open*(1-anim.explode)*.18;tray.position.y=anim.explode*.72;product.position.y=.23-anim.open*.32;camera.position.set(state.zoom*.27,state.zoom*.65,state.zoom*.73);camera.lookAt(0,.1,0);keyLight.intensity=0.8+state.light*2.0;if(goldSpot)goldSpot.intensity=5.0+state.light*8.0;if(beamMesh)beamMesh.material.opacity=0.35+state.light*0.45;rimLight.intensity=.6+state.light*1.2;renderer.render(scene,camera);}requestAnimationFrame(render);
 renderer.domElement.addEventListener('webglcontextlost',e=>{e.preventDefault();fallback('3D paused. Reload to try again; the original artwork is available below.');});

@@ -416,6 +416,7 @@ window.addEventListener('scroll',()=>{const prog=$('#reading-progress');if(!prog
 document.addEventListener('click', e => {
   const btn = e.target.closest('#hero-toggle-unbox');
   if (!btn) return;
+  e.preventDefault();
   const frame = document.getElementById('hero-iframe');
   if (frame && frame.contentWindow) {
     frame.contentWindow.postMessage({ type: 'toggle-unbox' }, '*');
