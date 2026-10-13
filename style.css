@@ -899,3 +899,38 @@
     border-radius: 20px !important;
   }
 }
+
+
+/* ===== Center Heading for Selected Section ===== */
+.selected .section-heading {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  gap: 16px !important;
+  margin-bottom: 45px !important;
+  position: relative !important;
+}
+
+.selected .section-heading > div {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  text-align: center !important;
+}
+
+.selected .section-heading .eyebrow {
+  margin: 0 auto 14px auto !important;
+  display: inline-block !important;
+  text-align: center !important;
+}
+
+.selected .section-heading h2 {
+  text-align: center !important;
+  margin: 0 !important;
+}
+
+.selected .section-heading .text-link {
+  margin-top: 6px !important;
+}
