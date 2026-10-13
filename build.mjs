@@ -15,7 +15,7 @@ const template = templateRaw.replaceAll('%%BASE_PATH%%', basePath);
 const esc = s => s.replaceAll('&', '&amp;').replaceAll('"', '&quot;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
 
 const pages = [
-  ['', 'Yara Khamis — Packaging, Spaces & Brand Identity'],
+  ['', 'Yara Khamis Packaging, Spaces & Brand Identity'],
   ['work', 'Selected Work — Yara Khamis'],
   ['about', 'About Yara Khamis'],
   ['services', 'Design Services — Yara Khamis'],
@@ -28,7 +28,7 @@ for (const [route, title] of pages) {
   fs.mkdirSync(dir, { recursive: true });
   const html = template
     .replace(/<title>.*?<\/title>/, `<title>${esc(title)}</title>`)
-    .replace('content="Yara Khamis — Design that takes shape"', `content="${esc(title)}"`);
+    .replace('content="Yara Khamis Design that takes shape"', `content="${esc(title)}"`);
   fs.writeFileSync(path.join(dir, 'index.html'), html);
 }
 
