@@ -1025,3 +1025,72 @@
     filter: blur(34px) !important;
   }
 }
+
+
+/* ===== Services Hero Image Visual Polish & Seamless Blending ===== */
+.service-head {
+  min-height: 460px !important;
+  align-items: center !important;
+  padding-bottom: 60px !important;
+}
+
+.service-hero-image {
+  position: absolute !important;
+  right: 6% !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 44% !important;
+  max-width: 540px !important;
+  height: 82% !important;
+  max-height: 420px !important;
+  border-radius: 26px !important;
+  overflow: hidden !important;
+  border: 1px solid rgba(212, 179, 106, 0.28) !important;
+  background: #111217 !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.65), 0 0 40px rgba(212, 179, 106, 0.12) !important;
+  mask-image: none !important;
+  -webkit-mask-image: none !important;
+  z-index: 1 !important;
+}
+
+.service-hero-image::after {
+  content: '' !important;
+  position: absolute !important;
+  inset: 0 !important;
+  background: linear-gradient(180deg, rgba(14, 15, 19, 0.0) 0%, rgba(14, 15, 19, 0.15) 50%, rgba(11, 12, 16, 0.85) 100%),
+              linear-gradient(90deg, rgba(11, 12, 16, 0.6) 0%, transparent 40%) !important;
+  pointer-events: none !important;
+  z-index: 2 !important;
+}
+
+.service-hero-image img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center 25% !important;
+  opacity: 0.95 !important;
+  filter: brightness(0.96) contrast(1.05) !important;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.service-hero-image:hover img {
+  transform: scale(1.04) !important;
+}
+
+@media (max-width: 900px) {
+  .service-head {
+    display: flex !important;
+    flex-direction: column !important;
+    min-height: auto !important;
+    gap: 30px !important;
+  }
+  .service-hero-image {
+    position: relative !important;
+    right: auto !important;
+    top: auto !important;
+    transform: none !important;
+    width: 100% !important;
+    max-width: none !important;
+    height: 280px !important;
+  }
+}
