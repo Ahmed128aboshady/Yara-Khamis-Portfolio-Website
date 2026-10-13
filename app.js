@@ -334,7 +334,7 @@ document.addEventListener('click',e=>{
   if(!a||a.target||a.hasAttribute('download')||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey||e.button!==0)return;
   const u=new URL(a.href,location.href);
   if(u.origin!==location.origin||u.pathname.includes('/lab/'))return;
-  if(a.id==='back-top'){e.preventDefault();window.scrollTo({top:0,behavior:reduced()?'instant':'smooth'});return;}
+  const topBtn=e.target.closest('#back-top');if(topBtn||a?.id==='back-top'){e.preventDefault();window.scrollTo({top:0,behavior:reduced()?'instant':'smooth'});return;}
   if(u.hash)return;
   e.preventDefault();
   if(a.hasAttribute('data-back-work')&&sessionStorage.getItem('work-url')){
@@ -411,7 +411,20 @@ const motionVideo=document.createElement('video');motionVideo.id='lightbox-video
 function resetMotion(){motionVideo.pause();motionVideo.removeAttribute('src');motionVideo.load();motionVideo.hidden=true;$('#lightbox-image').hidden=false;$('#play-motion').dataset.playing='no';}
 $('#lightbox').addEventListener('close',resetMotion);
 $('#play-motion').addEventListener('click',e=>{const im=lightboxItems[lightboxIndex];if(im?.motionType!=='video')return;e.stopImmediatePropagation();const playing=!motionVideo.hidden;if(playing){resetMotion();$('#play-motion').textContent='Play original animation ▷';}else{$('#lightbox-image').hidden=true;motionVideo.hidden=false;motionVideo.src=im.motion;motionVideo.play().catch(()=>toast('Press play in the video player.'));$('#play-motion').textContent='Show still image Ⅱ';}},true);
-window.addEventListener('scroll',()=>{const prog=$('#reading-progress');if(!prog)return;const max=document.documentElement.scrollHeight-window.innerHeight;const pct=max>0?(window.scrollY/max)*100:0;prog.style.width=pct+'%';},{passive:true});
+window.addEventListener('scroll',()=>{
+  const prog=$('#reading-progress');
+  const max=document.documentElement.scrollHeight-window.innerHeight;
+  if(prog){
+    const pct=max>0?(window.scrollY/max)*100:0;
+    prog.style.width=pct+'%';
+  }
+  const btn=$('#back-top');
+  if(btn){
+    const distFromBottom=document.documentElement.scrollHeight-(window.scrollY+window.innerHeight);
+    const nearBottom=distFromBottom<420||(max>0&&(window.scrollY/max)>0.82);
+    btn.classList.toggle('visible',nearBottom);
+  }
+},{passive:true});
 
 document.addEventListener('click', e => {
   const btn = e.target.closest('#hero-toggle-unbox');
